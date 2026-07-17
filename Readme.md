@@ -1,11 +1,72 @@
-Image Classification using HOG Features and Support Vector Machines (SVM)This repository contains a complete machine learning workflow implemented in Jupyter Notebook (SCT_ML_3.ipynb) to classify images of cats and dogs. The project focuses on traditional computer vision engineering, leveraging robust feature descriptors rather than heavy convolutional neural networks (CNNs).📌 Project OverviewThe objective of this task is to design and evaluate an image classification model using a Support Vector Classifier (SVC).While training an SVM directly on raw pixel vectors frequently suffers from the curse of dimensionality and background noise, this implementation utilizes Histogram of Oriented Gradients (HOG) to extract structural shapes and contours. Combined with a non-linear Radial Basis Function (RBF) Kernel, the model maps clean decision boundaries with high precision.🏗️ Workflow PipelineData Preprocessing & Loading:Images are loaded dynamically from structured cat and dog folders.Converted to Grayscale to strip away high-variance color noise while preserving essential geometric patterns.Resized uniformly to $64 \times 64$ pixels to maintain high computational efficiency.Feature Engineering (HOG Extraction):Grayscale matrices are transformed into a dense 1,764-dimensional HOG feature vector.Configuration parameters: orientations=9, pixels_per_cell=(8, 8), and cells_per_block=(2, 2).Captures stable gradient magnitudes and orientations, providing cross-sample translational and illumination invariance.Dataset Splitting:Segmented into an 80% Training set (800 samples) and a 20% Testing set (200 samples).Stratified sampling ensures a perfectly balanced 1:1 ratio of classes across both sets.Model Architecture:Classifier: C-Support Vector Classification (sklearn.svm.SVC).Kernel: rbf (Radial Basis Function) to handle non-linear spatial arrangements.Hyperparameters: Configured with a soft-margin penalty ($C = 5.0$) to minimize training classification boundaries and automated variance scaling (gamma='scale').📊 Performance & Evaluation ResultsThe final optimized model yields strong structural generalization:Overall Test Accuracy: 86.50%Classification ReportPlaintext              precision    recall  f1-score   support
+## Cat vs Dog Image Classification using HOG + SVM
 
-         cat       0.88      0.84      0.86       100
-         dog       0.85      0.89      0.87       100
+## Project Overview
+This project builds a binary image classifier for cats and dogs using a traditional computer vision pipeline.
 
-    accuracy                           0.86       200
-   macro avg       0.87      0.86      0.86       200
-weighted avg       0.87      0.86      0.86       200
-Key InsightsContour vs. Raw Pixels: The migration to HOG features successfully eliminated flat background noise, lifting the classification performance boundary substantially over raw pixel models.Balanced Generalization: The balanced distribution of F1-scores (0.86 for cats, 0.87 for dogs) demonstrates that the RBF kernel maintains zero operational bias toward either class.🛠️ Requirements & InstallationTo execute this pipeline locally or within an isolated workspace, install the following standard machine learning dependencies:Bashpip install numpy opencv-python scikit-image scikit-learn
-Running the ProjectClone the repository:Bashgit clone https://github.com/comfyhavana/SCT_ML_3.git
-Place your image source folder (data.zip) into your session execution root directory.Run all extraction, training, and metrics blocks sequentially within SCT_ML_3.ipynb.
+Instead of training directly on raw pixels, the notebook extracts Histogram of Oriented Gradients (HOG) features from each image and trains a Support Vector Machine (SVM) with an RBF kernel. This improves robustness to background noise and reduces dimensionality.
+
+Notebook file: `SCT_ML_3.ipynb`
+
+## Dataset Structure
+The project expects the dataset in the following structure:
+
+```text
+data/
+  cat/
+  dog/
+```
+
+Each folder should contain images for the respective class.
+
+## Pipeline
+1. Load images from `data/cat` and `data/dog`.
+2. Convert images to grayscale.
+3. Resize all images to `64x64`.
+4. Extract HOG features with:
+   - `orientations=9`
+   - `pixels_per_cell=(8, 8)`
+   - `cells_per_block=(2, 2)`
+5. Split data into train/test using an 80/20 stratified split.
+6. Train `sklearn.svm.SVC` with:
+   - `kernel='rbf'`
+   - `C=5.0`
+   - `gamma='scale'`
+7. Evaluate using accuracy and a classification report.
+
+## Sample Performance
+Observed test accuracy from the notebook run is approximately `86%`.
+
+Example class-wise metrics:
+
+```text
+              precision    recall  f1-score   support
+
+cat              0.88      0.84      0.86       100
+dog              0.85      0.89      0.87       100
+
+accuracy                               0.86       200
+macro avg        0.87      0.86      0.86       200
+weighted avg     0.87      0.86      0.86       200
+```
+
+## Requirements
+Install dependencies with:
+
+```bash
+pip install numpy opencv-python scikit-image scikit-learn
+```
+
+## How to Run
+### Option 1: Local Jupyter
+1. Ensure the `data/` folder contains `cat/` and `dog/` subfolders.
+2. Open `SCT_ML_3.ipynb`.
+3. Run all cells in order.
+
+### Option 2: Google Colab
+1. Upload `data.zip`.
+2. Unzip using the first notebook cell.
+3. Run remaining cells sequentially.
+
+## Notes
+- The current approach is lightweight and interpretable compared to deep CNN models.
+- You can improve performance further with data augmentation, hyperparameter tuning, or a CNN baseline for comparison.
